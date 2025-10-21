@@ -1,4 +1,4 @@
-package SoftComputing.Core;
-
-public class GeneticAlgorithm {
-}
+import SoftComputing.Core.ReplacementHandler.*;
+import SoftComputing.Core.InfeasibilityHandlerImpl;
+import SoftComputing.interfaces.Replacement;
+import SoftComputing.interfaces.InfeasibilityHandler;
