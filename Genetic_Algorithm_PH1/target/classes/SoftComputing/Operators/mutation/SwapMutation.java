@@ -1,3 +1,6 @@
+package SoftComputing.Operators.mutation;
+
+
 import java.util.Random;
 import Chromosomes.Chromosome;
 import Chromosomes.IntegerChromosome;
