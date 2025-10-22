@@ -1,17 +1,18 @@
 package SoftComputing.Core;
 
 import SoftComputing.Chromosomes.Chromosome;
+import SoftComputing.Chromosomes.IntegerChromosome;
 import SoftComputing.interfaces.InfeasibilityHandler;
 
 import java.util.*;
+
 
 public class InfeasibilityHandlerImpl implements InfeasibilityHandler {
 
     @Override
     public boolean isFeasible(Chromosome individual) {
-        if (individual instanceof SoftComputing.Chromosomes.IntegerChromosome) {
-            SoftComputing.Chromosomes.IntegerChromosome ind =
-                    (SoftComputing.Chromosomes.IntegerChromosome) individual;
+        if (individual instanceof IntegerChromosome) {
+            IntegerChromosome ind = (IntegerChromosome) individual;
             List<Integer> genes = ind.getGenes();
             Set<Integer> unique = new HashSet<>(genes);
             return unique.size() == genes.size();
@@ -21,32 +22,50 @@ public class InfeasibilityHandlerImpl implements InfeasibilityHandler {
 
     @Override
     public Chromosome repair(Chromosome individual) {
-        if (individual instanceof SoftComputing.Chromosomes.IntegerChromosome) {
-            SoftComputing.Chromosomes.IntegerChromosome ind =
-                    (SoftComputing.Chromosomes.IntegerChromosome) individual;
+        if (individual instanceof IntegerChromosome) {
+            IntegerChromosome ind = (IntegerChromosome) individual;
             List<Integer> genes = new ArrayList<>(ind.getGenes());
             Set<Integer> seen = new HashSet<>();
             Random rand = new Random();
 
-            for (int i = 0; i < genes.size(); i++) {
+            int n = genes.size();
+
+
+            Set<Integer> available = new HashSet<>();
+            for (int i = 0; i < n; i++) {
+                available.add(i);
+            }
+
+
+            for (int g : genes) {
+                available.remove(g);
+            }
+
+
+            for (int i = 0; i < n; i++) {
                 int gene = genes.get(i);
                 if (seen.contains(gene)) {
-                    int newGene;
-                    do {
-                        newGene = rand.nextInt(genes.size());
-                    } while (seen.contains(newGene));
-                    genes.set(i, newGene);
+                    // Replace with a missing value if available
+                    if (!available.isEmpty()) {
+                        int newGene = available.iterator().next();
+                        available.remove(newGene);
+                        genes.set(i, newGene);
+                    } else {
+                        int newGene;
+                        do {
+                            newGene = rand.nextInt(n);
+                        } while (seen.contains(newGene));
+                        genes.set(i, newGene);
+                    }
                 }
                 seen.add(genes.get(i));
             }
 
-            SoftComputing.Chromosomes.IntegerChromosome fixed =
-                    new SoftComputing.Chromosomes.IntegerChromosome(genes.size(), 0, genes.size() - 1);
-            for (int i = 0; i < genes.size(); i++) {
-                fixed.setGene(i, genes.get(i));
-            }
-            return fixed;
+            IntegerChromosome repaired = new IntegerChromosome(genes);
+            repaired.setFitness(ind.getFitness());
+            return repaired;
         }
+
         return individual.copy();
     }
 }
