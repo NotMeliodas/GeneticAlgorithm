@@ -1,0 +1,28 @@
+package Operators.mutation;
+
+import java.util.Random;
+import Chromosomes.Chromosome;
+import Chromosomes.IntegerChromosome;
+import interfaces.Mutation;
+
+public class SwapMutation implements Mutation {
+
+    private final Random random = new Random();
+
+    @Override
+    public void mutate(Chromosome chromosome, double mutationRate) {
+        if (!(chromosome instanceof IntegerChromosome)) return;
+
+        IntegerChromosome intChrom = (IntegerChromosome) chromosome;
+        int length = intChrom.length();
+
+        for (int i = 0; i < length; i++) {
+            if (random.nextDouble() < mutationRate) {
+                int j = random.nextInt(length);
+                int temp = intChrom.getGene(i);
+                intChrom.setGene(i, intChrom.getGene(j));
+                intChrom.setGene(j, temp);
+            }
+        }
+    }
+}
