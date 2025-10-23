@@ -1,7 +1,6 @@
 package SoftComputing.interfaces;
 
 import SoftComputing.Chromosomes.Chromosome;
-
 import java.util.List;
 
 public interface SelectionStrategy {

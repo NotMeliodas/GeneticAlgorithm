@@ -13,7 +13,12 @@ public class InfeasibilityHandlerImpl implements InfeasibilityHandler {
     public boolean isFeasible(Chromosome individual) {
         if (individual instanceof IntegerChromosome) {
             IntegerChromosome ind = (IntegerChromosome) individual;
-            List<Integer> genes = ind.getGenes();
+            int[] geneArray = ind.getGenes();
+            List<Integer> genes = new ArrayList<>();
+            for (int g : geneArray) {
+                genes.add(g);
+            }
+
             Set<Integer> unique = new HashSet<>(genes);
             return unique.size() == genes.size();
         }
@@ -24,7 +29,11 @@ public class InfeasibilityHandlerImpl implements InfeasibilityHandler {
     public Chromosome repair(Chromosome individual) {
         if (individual instanceof IntegerChromosome) {
             IntegerChromosome ind = (IntegerChromosome) individual;
-            List<Integer> genes = new ArrayList<>(ind.getGenes());
+            int[] geneArray = ind.getGenes();
+            List<Integer> genes = new ArrayList<>();
+            for (int g : geneArray) {
+                genes.add(g);
+            }
             Set<Integer> seen = new HashSet<>();
             Random rand = new Random();
 
@@ -61,7 +70,15 @@ public class InfeasibilityHandlerImpl implements InfeasibilityHandler {
                 seen.add(genes.get(i));
             }
 
-            IntegerChromosome repaired = new IntegerChromosome(genes);
+            int[] repairedGenes = new int[genes.size()];
+            for (int i = 0; i < genes.size(); i++) {
+                repairedGenes[i] = genes.get(i);
+            }
+
+            IntegerChromosome repaired = new IntegerChromosome(repairedGenes.length, 0, repairedGenes.length - 1);
+            for (int i = 0; i < repairedGenes.length; i++) {
+                repaired.setGenes(i, repairedGenes[i]);
+            }
             repaired.setFitness(ind.getFitness());
             return repaired;
         }

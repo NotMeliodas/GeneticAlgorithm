@@ -1,11 +1,12 @@
 package SoftComputing.Operators.mutation;
 
 import SoftComputing.Chromosomes.Chromosome;
+import SoftComputing.Chromosomes.IntegerChromosome;
+import SoftComputing.Chromosomes.FloatChromosome;
+import SoftComputing.Chromosomes.BinaryChromosome;
 import SoftComputing.interfaces.Mutation;
 
-import java.util.List;
 import java.util.Random;
-
 
 public class SwapMutation implements Mutation {
 
@@ -13,30 +14,65 @@ public class SwapMutation implements Mutation {
 
     @Override
     public void mutate(Chromosome chromosome, double mutationRate) {
-
+        // Apply mutation only with given probability
         if (random.nextDouble() > mutationRate) {
             return;
         }
 
-        List<Integer> genes = chromosome.getGenes();
-        int size = genes.size();
+        // Handle IntegerChromosome
+        if (chromosome instanceof IntegerChromosome) {
+            IntegerChromosome intChrom = (IntegerChromosome) chromosome;
+            int[] genes = intChrom.getGenes();
+            if (genes.length < 2) return;
 
-        if (size < 2) return; // No mutation possible
+            int i = random.nextInt(genes.length);
+            int j = random.nextInt(genes.length);
+            while (i == j) j = random.nextInt(genes.length);
 
-        // Pick two different gene positions to swap
-        int index1 = random.nextInt(size);
-        int index2 = random.nextInt(size);
+            // Swap
+            int temp = genes[i];
+            genes[i] = genes[j];
+            genes[j] = temp;
 
-        while (index2 == index1) {
-            index2 = random.nextInt(size);
+            // Update genes
+            intChrom.setGenes(i, genes[i]);
+            intChrom.setGenes(j, genes[j]);
         }
 
-        // Manual swap using simple Java logic
-        int temp = genes.get(index1);
-        genes.set(index1, genes.get(index2));
-        genes.set(index2, temp);
+        // Handle FloatChromosome
+        else if (chromosome instanceof FloatChromosome) {
+            FloatChromosome floatChrom = (FloatChromosome) chromosome;
+            double[] genes = floatChrom.getGenes();
+            if (genes.length < 2) return;
 
-        // Update chromosome with modified genes
-        chromosome.setGenes(genes);
+            int i = random.nextInt(genes.length);
+            int j = random.nextInt(genes.length);
+            while (i == j) j = random.nextInt(genes.length);
+
+            double temp = genes[i];
+            genes[i] = genes[j];
+            genes[j] = temp;
+
+            floatChrom.setGenes(i, genes[i]);
+            floatChrom.setGenes(j, genes[j]);
+        }
+
+        // Handle BinaryChromosome
+        else if (chromosome instanceof BinaryChromosome) {
+            BinaryChromosome binChrom = (BinaryChromosome) chromosome;
+            boolean[] genes = binChrom.getGenes();
+            if (genes.length < 2) return;
+
+            int i = random.nextInt(genes.length);
+            int j = random.nextInt(genes.length);
+            while (i == j) j = random.nextInt(genes.length);
+
+            boolean temp = genes[i];
+            genes[i] = genes[j];
+            genes[j] = temp;
+
+            binChrom.setGenes(i, genes[i]);
+            binChrom.setGenes(j, genes[j]);
+        }
     }
 }
